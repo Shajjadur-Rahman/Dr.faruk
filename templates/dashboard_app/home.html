@@ -1,0 +1,254 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block title_block %} Home {% endblock %}
+{% block content_block %}
+<div class="row">
+    <div class="col-md-6 col-lg-3 grid-margin stretch-card">
+        <div class="card" style="background:#2eafd7; color:#fff;">
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-md-center">
+                    <i class="mdi mdi-basket icon-lg"></i>
+                    <div class="ml-3">
+                        <p class="mb-0">Today's TTL Sales</p>
+                        <h6>{{ today_total_sell }}</h6>
+                        <small>{{ today }}</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-3 grid-margin stretch-card">
+        <div class="card" style="background:#2eafd7; color:#fff;">
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-md-center">
+                    <i class="mdi mdi-rocket icon-lg"></i>
+                    <div class="ml-3">
+                        <p class="mb-0">{{ today|date:"M" }} Total Sales</p>
+                        <h6>{{ current_month_total_sell }}</h6>
+                        <small>{{ today }}</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-3 grid-margin stretch-card">
+        <div class="card" style="background:#2eafd7; color:#fff;">
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-md-center">
+                    <i class="mdi mdi-diamond icon-lg"></i>
+                    <div class="ml-3">
+                        <p class="mb-0">{{ previous_month|date:"M" }} Total sells</p>
+                        <h6>{{ prev_month_sell }}</h6>
+                        <small>{{ previous_month }}</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-3 grid-margin stretch-card">
+        <div class="card" style="background:#2eafd7; color:#fff;">
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-md-center">
+                    <i class="mdi mdi-chart-line-stacked icon-lg"></i>
+                    <div class="ml-3">
+                        <p class="mb-0">{{ today.year }} Total sells</p>
+                        <h6>{{ current_year_sell }}</h6>
+                        <small>{{ today }}</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-md-6 col-lg-3 grid-margin stretch-card">
+        <div class="card" style="background:#4a0c75; color:#fff;">
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-md-center">
+                    <i class="mdi mdi-basket icon-lg"></i>
+                    <div class="ml-3">
+                        <p class="mb-0">Today's cash Sales</p>
+                        <h6>{{ today_cash_sale }}</h6>
+                        <small>{{ today }}</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-3 grid-margin stretch-card">
+        <div class="card" style="background:#4a0c75; color:#fff;">
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-md-center">
+                    <i class="mdi mdi-rocket icon-lg"></i>
+                    <div class="ml-3">
+                        <p class="mb-0">{{ today|date:"M" }} cash Sales</p>
+                        <h6>{{ current_month_cash_sale }}</h6>
+                        <small>{{ today }}</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-3 grid-margin stretch-card">
+        <div class="card" style="background:#4a0c75; color:#fff;">
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-md-center">
+                    <i class="mdi mdi-diamond icon-lg"></i>
+                    <div class="ml-3">
+                        <p class="mb-0">{{ previous_month|date:"M" }} cash sells</p>
+                        <h6>{{ prev_month_cash_sale }}</h6>
+                        <small>{{ previous_month }}</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-3 grid-margin stretch-card">
+        <div class="card" style="background:#4a0c75; color:#fff;">
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-md-center">
+                    <i class="mdi mdi-chart-line-stacked icon-lg"></i>
+                    <div class="ml-3">
+                        <p class="mb-0">{{ today.year }} cash sells</p>
+                        <h6>{{ current_year_cash_sale }}</h6>
+                        <small>{{ today }}</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 col-lg-3 grid-margin stretch-card">
+        <div class="card" style="background:#5b2424; color:#fff;">
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-md-center">
+                    <i class="mdi mdi-basket icon-lg"></i>
+                    <div class="ml-3">
+                        <p class="mb-0">Today's Due Sales</p>
+                        <h6>{{ today_total_due_sell }}</h6>
+                        <small>{{ today }}</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-3 grid-margin stretch-card">
+        <div class="card" style="background:#5b2424; color:#fff;">
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-md-center">
+                    <i class="mdi mdi-rocket icon-lg"></i>
+                    <div class="ml-3">
+                        <p class="mb-0">{{ today|date:"M" }} due Sales</p>
+                        <h6>{{ current_month_due_total_sell }}</h6>
+                        <small>{{ today }}</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-3 grid-margin stretch-card">
+        <div class="card" style="background:#5b2424; color:#fff;">
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-md-center">
+                    <i class="mdi mdi-diamond icon-lg"></i>
+                    <div class="ml-3">
+                        <p class="mb-0">{{ previous_month|date:"M" }} due sells</p>
+                        <h6>{{ prev_month_due_sell }}</h6>
+                        <small>{{ previous_month }}</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-3 grid-margin stretch-card">
+        <div class="card" style="background:#5b2424; color:#fff;">
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-md-center">
+                    <i class="mdi mdi-chart-line-stacked icon-lg"></i>
+                    <div class="ml-3">
+                        <p class="mb-0">{{ today.year }} Total due sells</p>
+                        <h6>{{ current_year_due_sell }}</h6>
+                        <small>{{ today }}</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row grid-margin" id="stock">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h6 class="card-title">Stock status</h6>
+                <form  action="#stock" method="GET">
+                    <div class="d-flex table-responsive">
+                        <div class="btn-group mr-2">
+                            <button class="btn btn-sm btn-info"><a href="{% url 'Inventory:all-invoice' %}" class="text-light" style="text-decoration:none;"><i class="mdi mdi-plus-circle-outline"></i>Add</a></button>
+                        </div>
+                        <div class="btn-group mr-2">
+                            <button type="button" class="btn btn-light"><a href="{% url 'Inventory:stock_product_report_pdf' %}" target="_blank"><i class="mdi mdi-printer"></i></a></button>
+                        </div>
+                        <div class="btn-group ml-auto mr-2 border-1">
+                            <input type="text" class="form-control" name="stock_search" value="{{ request.GET.stock_search }}" placeholder="Search Here">
+                            <input type="submit" class="btn btn-info btn-sm" value="Search">
+                        </div>
+                    </div>
+                </form>
+                <div class="table-responsive">
+                    <table class="table mt-3 border-top text-center">
+                        <thead>
+                        <tr class="bg-info">
+                            <th>No</th>
+                            <th>Product ( {{ total_stock_products }} )</th>
+                            <th>In Stock</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for product in stock_products %}
+                        <tr style="{% if product.quantity >= 0 and product.quantity < 10 %}background:#5b2424;color:#fff;{% elif product.quantity >= 10 and product.quantity <= 20 %}background:#d97c7c; color:#fff;{% elif product.quantity > 20 and product.quantity <= 30 %}background:#ceaaaa; color:#fff;{% else %}background:#e8e8e8;{% endif %}">
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ product.product_name }}</td>
+                            <td>{{ product.quantity }}</td>
+                            <td><a href="{% url 'Inventory:add-existing-product' product_id=product.pk %}" class="badge badge-info">Add</a></td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td>None</td>
+                            <td>None</td>
+                            <td>None</td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="d-flex align-items-center justify-content-between flex-column flex-sm-row mt-4">
+                    <p class="mb-3 mb-sm-0">Showing 1 to 20 of 20 entries</p>
+                    <nav>
+                        <ul class="pagination pagination-info mb-0">
+                            {% if stock_products.has_previous %}
+                            <li class="page-item"><a href="?page={{ customers.previous_page_number }}" class="page-link"><i class="mdi mdi-chevron-left"></i></a></li>
+                            {% endif %}
+                            {% for num in stock_products.paginator.page_range %}
+                            {% if stock_products.number == num %}
+                            <li class="page-item active"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                            {% else %}
+                            <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                            {% endif %}
+                            {% endfor %}
+                            {% if stock_products.has_next %}
+                            <li class="page-item"><a class="page-link" href="?page={{ customers.next_page_number }}"><i class="mdi mdi-chevron-right"></i></a></li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,53 @@
+
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Report of {{ customer.name }}</title>
+
+
+</head>
+
+<body>
+<span>Customer  : {{ product.customer.name }}</span><br>
+<span>Village : {{ product.customer.village }}</span><br>
+<span>PS : {{ product.customer.ps }}</span><br>
+<span>District : {{ product.customer.district }}</span><br>
+<span>Phone : {{ product.customer.phone }}</span><br>
+<span>Shade No : {{ shade_num }}</span><br>
+
+<table border="1" style="text-align:center;">
+	<thead>
+	<tr style="padding:5px 0">
+		<th>Product</th>
+		<th>paid-amount</th>
+		<th>payment-date</th>
+		<th>Purchasing Date</th>
+	</tr>
+	</thead>
+	<tbody>
+	{% for cart in payment_carts %}
+	<tr style="padding:4px 2px;">
+		<td class="paid_amount">{{ cart.products.name }}</td>
+		<td class="paid_amount">{{ cart.paid_amount }}</td>
+		<td class="paid_amount">{{ cart.payment_date|date:'SHORT_DATE_FORMAT'}} {{ cart.payment_date|time:'h:i a'}}</td>
+		<td class="paid_amount">{{ cart.products.created|date:'SHORT_DATE_FORMAT' }}{{ cart.products.created|time:'h:i a' }}</td>
+	</tr>
+	{% empty %}
+	<tr>
+		<td colspan="">No payment history of " {{ customer_name }} " </td>
+	</tr>
+	{% endfor %}
+	</tbody>
+	<tfoot>
+	<tr style="padding:5px 0">
+		<td>TOTAL</td>
+		<td colspan="3">{{ total_paid_amount }}</td>
+	</tr>
+	</tfoot>
+</table>
+<br>
+<span>Report at : {{ report_date }}</span><br>
+<span>Report by : {{ report_by }}</span><br>
+
+</body>
+</html>

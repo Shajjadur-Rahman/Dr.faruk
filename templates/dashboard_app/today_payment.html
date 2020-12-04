@@ -1,0 +1,52 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block title_block %} Today's payment info {% endblock %}
+{% block content_block %}
+<div class="row">
+    <div class="col-lg-12 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title text-center">Today's payment info </h4>
+            <hr>
+          <div class="table-responsive mt-4">
+            <table class="table">
+              <thead>
+                <tr style="background:#372934; color:#fff;">
+                  <th>Product</th>
+                  <th>paid-amount</th>
+                  <th>payment-date</th>
+                  <th>Purchasing Date</th>
+                  <th>Customer</th>
+                </tr>
+              </thead>
+              <tbody>
+              {% for cart in payments %}
+                <tr style="background:#6b5c68;"  title="Purchasing date {{product.created|date:'SHORT_DATE_FORMAT'}} {{product.created|time:'h:i a'}}">
+                  <td class="paid_amount">{{ cart.products.name }}</td>
+                   <td class="paid_amount">{{ cart.paid_amount }}</td>
+                   <td class="paid_amount">{{ cart.payment_date|date:'SHORT_DATE_FORMAT'}} {{ cart.payment_date|time:'h:i a'}}</td>
+                   <td class="paid_amount">{{ cart.products.created|date:'SHORT_DATE_FORMAT' }}{{ cart.products.created|time:'h:i a' }}</td>
+                   <td class="paid_amount">{{ cart.customers.name }}</td>
+                </tr>
+              {% empty %}
+                <tr>
+                  <td colspan="">No payment history of " {{ customer_name }} " </td>
+                </tr>
+              {% endfor %}
+              </tbody>
+                <tfoot>
+                    <tr style="background:#372934; color:#fff;">
+                        <td>TOTAL</td>
+                        <td>{{ total_paid }}</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tfoot>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+{% endblock %}>

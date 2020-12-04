@@ -1,0 +1,95 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block title_block %} {% if product %} Updating {{ product }} {% else %}Selling product {% endif %} {% endblock %}
+{% block content_block %}
+<!-- partial -->
+<div class="row grid-margin">
+    <div class="col-12">
+        <form action="" method="post">{% csrf_token %}
+            <div class="card">
+                {% if messages %}
+                {% for message in messages %}
+                <div {% if message.tags %} class="alert alert-{{ message.tags }} {% endif %}" role="alert">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                {% endfor %}
+                {% endif %}
+
+                <div class="card-body">
+                    {% if product %}
+                    <h4 class="card-title"> Customer : {{ product.customer }} </h4>
+                    <h4 class="card-title"> Shade No : {{ product.shade.shade_num }}</h4>
+                    <h4 class="card-title"> Updating : {{ product.name }} </h4>
+                    <hr>
+                    {% else %}
+                    <table class="table text-center">
+                        <tr>
+                            <th>Shade No</th>
+                            <th>Customer</th>
+                            <th>Action</th>
+                        </tr>
+                        <tr>
+                            <td>{{ shade.shade_num }}</td>
+                            <td>{{ customer }}</td>
+                            <td>Sell new product</td>
+                        </tr>
+                    </table>
+                    <hr>
+                    {% endif %}
+
+                    <div class="form-group row">
+                        <div class="col-lg-3">
+                            <label class="col-form-label">Select Product</label>
+                        </div>
+                        <div class="col-lg-8">
+                            {{ form.select_product }}
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-lg-3">
+                            <label class="col-form-label">Price per unit</label>
+                        </div>
+                        <div class="col-lg-8">
+                            {{ form.price }}
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-lg-3">
+                            <label class="col-form-label">Quantity</label>
+                        </div>
+                        <div class="col-lg-8">
+                            {{ form.quantity }}
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-lg-3">
+                            <label class="col-form-label">Discount per unit (Optional)</label>
+                        </div>
+                        <div class="col-lg-8">
+                            {{ form.discount_per_unit }}
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-lg-3">
+                            <label class="col-form-label">Sell status</label>
+                        </div>
+                        <div class="col-lg-8">
+                            {{ form.sell_status }}
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-lg-3">
+                        </div>
+                        <div class="col-lg-8">
+                            <a href="{% if product %}{% url 'Dashboard:customer-purchasing-info' shade_id=shade_id customer_id=product.customer.pk %}{% else %}{% url 'Dashboard:customer-purchasing-info' shade_id=shade_id customer_id=customer.pk %}{% endif %}" class="btn btn-danger">Back</a>
+                            <input class="btn btn-primary" type="submit" value="Submit">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,83 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block title_block %} payment for {{ customer }} {% endblock %}
+{% block content_block %}
+ <!-- partial -->
+          <div class="row grid-margin">
+            <div class="col-12">
+               {% if messages %}
+                {% for message in messages %}
+                <div {% if message.tags %} class="alert alert-{{ message.tags }} {% endif %}" role="alert">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                {% endfor %}
+              {% endif %}
+
+                <table class="table">
+                    <thead>
+                    <tr style="background:#372934; color:#fff;">
+                        <th>customer</th>
+                        <th>Product</th>
+                        <th>Previous</th>
+                        <th>Paid</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>{{ customer }}</td>
+                        <td>{% if product %}{{ product.name }}{% else %} {{ product_name }} {% endif %}</td>
+                        <td>{{ total_due }}</td>
+                        <td>{% if product %}{{ total_paid_amount }}{% else %}<input type="checkbox" Checked disabled> 100% paid{% endif %}</td>
+                    </tr>
+                    </tbody>
+
+                    <tfoot>
+                    <tr>
+                        <td></td>
+                        <td>Due remaining </td>
+                        <td>{{ remaining_due }}</td>
+                        <td></td>
+                    </tr>
+                    </tfoot>
+
+                </table>
+
+              <form action="" method="post">{% csrf_token %}
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title"></h4>
+
+                    <div class="form-group row">
+                      <div class="col-lg-3">
+                        <label class="col-form-label">{% if product %} Input payment amount please... {% else %} No due available for {{ product_name }}{% endif %}</label>
+                      </div>
+
+                      <div class="col-lg-8">
+                      {% if product %}
+                        <input class="form-control" name="paid_amount" maxlength="25" id="defaultconfig-2" type="number" placeholder="Input your payment amount" required>
+                      {% else %}
+                        <input class="form-control bg-danger" name="paid_amount" maxlength="25" id="defaultconfig" type="number" placeholder="For {{ product_name }} no due available" disabled>
+                      {% endif %}
+                      </div>
+                    </div>
+
+                    <div class="form-group row">
+                      <div class="col-lg-3">
+                      </div>
+                      <div class="col-lg-8">
+                      {% if product %}
+                       <a href="{% url 'Dashboard:customer-purchasing-info' shade_id=shade_id customer_id=customer.pk %}" class="btn btn-danger">Back</a>
+                      {% else %}
+                        <a href="{% url 'Dashboard:customer-purchasing-info' shade_id=shade_id customer_id=customer.pk %}" class="btn btn-danger">Back</a>
+                      {% endif %}
+                        <input class="btn btn-primary" type="submit" value="Submit">
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+{% endblock %}

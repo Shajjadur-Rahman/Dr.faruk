@@ -1,0 +1,72 @@
+
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Import report of {{ month_n }}</title>
+
+
+</head>
+
+<body>
+
+
+<span>Company  : Dr. Faruq Hossain Poultry firm </span><br>
+<span>Zone : Shukurer Hat</span><br>
+<span>PS : Mithapukur</span><br>
+<span>District : Rangpur</span><br>
+<span>Phone : 017XXXXXXXX</span><br>
+<span>Email : faruk@gamil.com</span><br>
+<span>Month : {{ month_n }}</span><br>
+<span>Date : {{ report_date }}</span><br>
+
+<table border="1" style="text-align:center;">
+	<thead>
+	<tr style="padding:5px 0">
+		<th>Invoice No</th>
+		<th>Product</th>
+		<th>Rate</th>
+		<th>Qty</th>
+		<th>Total</th>
+		<th>Supplier</th>
+		<th>Imported on</th>
+	</tr>
+	</thead>
+	<tbody>
+	{% for product in products %}
+	<tr>
+		<td>{{ product.invoice.invoice_no }}</td>
+		<td>{{ product.product_name }}</td>
+		<td>{{ product.rate }}</td>
+		<td>{{ product.quantity }}</td>
+		<td>{{ product.total_price }}</td>
+		<td>{{ product.supplier }}</td>
+		<td>{{ product.invoice.date }}</td>
+	</tr>
+	{% empty %}
+	<tr>
+		<td>None</td>
+		<td>None</td>
+		<td>None</td>
+		<td>None</td>
+		<td>None</td>
+		<td>None</td>
+		<td>None</td>
+	</tr>
+	{% endfor %}
+	</tbody>
+	<tfoot>
+	<tr style="padding:5px 0">
+		<td colspan="3">Total</td>
+		<td>{{ total_qty }}</td>
+		<td>{{ total_price }}</td>
+		<td></td>
+	</tr>
+	</tfoot>
+</table>
+
+<br>
+<span>Report at : {{ report_date }}</span><br>
+<span>Report by : {{ report_by }}</span><br>
+
+</body>
+</html>

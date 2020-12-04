@@ -1,0 +1,73 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block title_block %} All imports in  {{ month_n }} {% endblock %}
+
+{% block content_block %}
+<div class="row grid-margin" id="stock">
+	<div class="col-12">
+		<div class="card">
+			<div class="card-body">
+				<h6 class="card-title text-center">All imports in  <span class="badge badge-success">{{ month_n }}</span></h6>
+				<hr>
+				<form  action="#stock" method="GET" class="mt-4">
+					<div class="d-flex table-responsive">
+						<div class="btn-group ml-auto mr-2 border-1">
+							<button type="button" class="btn btn-light"><a href="{% url 'Inventory:import-current-month-pdf' month_n=month_n month=month %}" target="_blank"><i class="mdi mdi-printer"></i></a></button>
+							<a href="{% url 'Balance:balance' %}" class="btn btn-sm btn-info">Back</a>
+						</div>
+					</div>
+				</form>
+				<div class="table-responsive">
+					<table class="table mt-3 border-top">
+						<thead>
+						<tr class="bg-info">
+							<th>Invoice No</th>
+							<th>Product</th>
+							<th>Rate</th>
+							<th>Qty</th>
+							<th>Total</th>
+							<th>Supplier</th>
+							<th>Imported on</th>
+						</tr>
+						</thead>
+						<tbody>
+						{% for product in products %}
+						<tr style="background:#e8e8e8;">
+							<td>{{ product.invoice.invoice_no }}</td>
+							<td>{{ product.product_name }}</td>
+							<td>{{ product.rate }}</td>
+							<td>{{ product.quantity }}</td>
+							<td>{{ product.total_price }}</td>
+							<td>{{ product.supplier }}</td>
+							<td>{{ product.invoice.date }}</td>
+						</tr>
+						{% empty %}
+						<tr>
+							<td>None</td>
+							<td>None</td>
+							<td>None</td>
+							<td>None</td>
+							<td>None</td>
+							<td>None</td>
+							<td>None</td>
+						</tr>
+						{% endfor %}
+						</tbody>
+						<tfoot>
+						<tr style="background:#a8a8a8;">
+							<td>Total</td>
+							<td></td>
+							<td></td>
+							<td>{{ total_qty }}</td>
+							<td>{{ total_price }}</td>
+							<td></td>
+							<td></td>
+						</tr>
+						</tfoot>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}l>

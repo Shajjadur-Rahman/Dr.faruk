@@ -1,0 +1,117 @@
+
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+
+<!-- Mirrored from www.bootstrapdash.com/demo/victory/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 27 Sep 2020 17:38:19 GMT -->
+<head>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>{% block title_block %} {% endblock %}</title>
+	
+	
+	<!-- Custom fonts for date time picker -->
+	<link href="{% static 'vendors/css/all.min.css' %}" rel="stylesheet" type="text/css">
+	<link href="{% static 'vendors/css/fontawesome.min.css' %}" rel="stylesheet" type="text/css">
+	<!-- Custom fonts for date time picker -->
+	
+	
+	
+	<!-- plugins:css -->
+	<link rel="stylesheet" href="{% static 'vendors/mdi/css/materialdesignicons.min.css' %}">
+	<link rel="stylesheet" href="{% static 'vendors/simple-line-icons/css/simple-line-icons.css' %}">
+	<link rel="stylesheet" href="{% static 'vendors/flag-icon-css/css/flag-icon.min.css' %}">
+	<link rel="stylesheet" href="{% static 'vendors/css/vendor.bundle.base.css' %}">
+	<!-- endinject -->
+	<!-- plugin css for this page -->
+	<link rel="stylesheet" href="{% static 'vendors/font-awesome/css/font-awesome.min.css' %}" />
+	<link rel="stylesheet" href="{% static 'vendors/jquery-bar-rating/fontawesome-stars.css' %}">
+	<!-- End plugin css for this page -->
+	
+	
+	<!-- inject:css -->
+	<link rel="stylesheet" href="{% static 'css/style.css' %}">
+	<!-- endinject -->
+	<link rel="shortcut icon" href="{% static 'images/favicon.png' %}" />
+	{% block style_block %}
+	
+	{% endblock %}
+</head>
+<body>
+
+<div class="container-scroller">
+	{% include 'base/navbar.html' %}
+	<div class="container-fluid page-body-wrapper">
+		<div class="row row-offcanvas row-offcanvas-right">
+			<!-- partial:partials/_settings-panel.html -->
+			{% include 'base/setting_pannel.html' %}
+			{% include 'base/todo_list_sidebar.html' %}
+			{% include 'base/sidebar.html' %}
+			
+			<!--Warning messages-->
+			<div class="content-wrapper">
+				{% block content_block %}
+				
+				
+				{% endblock %}
+				{% include 'base/footer.html' %}
+				<!-- content-wrapper ends -->
+			</div>
+			<!-- row-offcanvas ends -->
+		</div>
+		<!-- page-body-wrapper ends -->
+	</div>
+	<!-- container-scroller -->
+	
+	<!-- plugins:js -->
+	<script src="{% static 'vendors/js/vendor.bundle.base.js' %}"></script>
+	<!-- endinject -->
+	<!-- Plugin js for this page-->
+	<script src="{% static 'vendors/jquery-bar-rating/jquery.barrating.min.js' %}"></script>
+	<script src="{% static 'vendors/chart.js/Chart.min.js' %}"></script>
+	<script src="{% static 'vendors/raphael/raphael.min.js' %}"></script>
+	<script src="{% static 'vendors/morris.js/morris.min.js' %}"></script>
+	<script src="{% static 'vendors/jquery-sparkline/jquery.sparkline.min.js' %}"></script>
+	<!-- End plugin js for this page-->
+	<!-- inject:js -->
+	<script src="{% static 'js/off-canvas.js' %}"></script>
+	<script src="{% static 'js/hoverable-collapse.js' %}"></script>
+	<script src="{% static 'js/misc.js' %}"></script>
+	<script src="{% static 'js/settings.js' %}"></script>
+	<script src="{% static 'js/todolist.js' %}"></script>
+	<!-- endinject -->
+	<!-- Custom js for this page-->
+	<script src="{% static 'js/dashboard.js' %}"></script>
+	<!-- End custom js for this page-->
+	
+	
+	
+	
+	
+	<!--Datetime picker Bootstrap 4 -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+	
+	<!-- Moment.js -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.23.0/moment.min.js" integrity="sha256-VBLiveTKyUZMEzJd6z2mhfxIqz3ZATCuVMawPZGzIfA=" crossorigin="anonymous"></script>
+	<!-- Tempus Dominus Bootstrap 4 -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/css/tempusdominus-bootstrap-4.min.css" integrity="sha256-XPTBwC3SBoWHSmKasAk01c08M6sIA5gF5+sRxqak2Qs=" crossorigin="anonymous" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/js/tempusdominus-bootstrap-4.min.js" integrity="sha256-z0oKYg6xiLq3yJGsp/LsY9XykbweQlHl42jHv2XTBz4=" crossorigin="anonymous"></script>
+	
+	
+	<script>
+      $(function () {
+        $("#datetimepicker1").datetimepicker();
+      });
+    </script>
+	
+	{% block script %}
+	
+	{% endblock %}
+</div>
+</body>
+
+
+<!-- Mirrored from www.bootstrapdash.com/demo/victory/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 27 Sep 2020 17:39:24 GMT -->
+</html>

@@ -1,0 +1,46 @@
+
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Report of stock product status</title>
+	
+	<style>
+	
+	
+	</style>
+</head>
+
+<body>
+<span>Company  : Dr. Faruq Hossain Poultry firm </span><br>
+<span>Zone : Shukurer Hat</span><br>
+<span>PS : Mithapukur</span><br>
+<span>District : Rangpur</span><br>
+<span>Phone : 017XXXXXXXX</span><br>
+<span>Email : faruk@gamil.com</span><br>
+
+<table border="1" style="text-align:center;">
+	<thead>
+	<tr style="padding:5px; 0">
+		<th>Product</th>
+		<th>Quantity</th>
+	</tr>
+	</thead>
+	<tbody>
+	{% for product in s_products %}
+	<tr style="padding:4px 0">
+		<td>{{ product.product_name }}</td>
+		<td>{{ product.quantity }} ({{ product.unit_tag }})</td>
+	</tr>
+	{% empty %}
+	<tr>
+		<td colspan=""> No product available in stock </td>
+	</tr>
+	{% endfor %}
+	</tbody>
+</table>
+<br>
+<span>Report at : {{ report_date }}</span><br>
+<span>Report by : {{ report_by }}</span><br>
+
+</body>
+</html>

@@ -1,0 +1,85 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block title_block %}{% if customer_id %} Updating {{ customer }}'s info {% else %} Create new customer{% endif %} {% endblock %}
+{% block content_block %}
+<!-- partial -->
+<div class="row grid-margin">
+    <div class="col-12">
+
+        {% if messages %}
+        {% for message in messages %}
+        <div {% if message.tags %} class="alert alert-{{ message.tags }} {% endif %}" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        <form action="" method="post">{% csrf_token %}
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title text-center">{% if customer_id %}Updating {{ customer }}'s info {% else %}Create new customer{% endif %}</h4>
+                    <hr>
+                    <div class="form-group row d-none">
+                        <div class="col-lg-3">
+                            <label class="col-form-label">Customer no</label>
+                        </div>
+                        <div class="col-lg-8">
+                            {{ form.num }}
+                        </div>
+                    </div>
+
+                    <div class="form-group row mt-4">
+                        <div class="col-lg-3">
+                            <label class="col-form-label">Customer Name</label>
+                        </div>
+                        <div class="col-lg-8">
+                            {{ form.name }}
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-lg-3">
+                            <label class="col-form-label">Village</label>
+                        </div>
+                        <div class="col-lg-8">
+                            {{ form.village }}
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-lg-3">
+                            <label class="col-form-label">PS</label>
+                        </div>
+                        <div class="col-lg-8">
+                            {{ form.ps }}
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-lg-3">
+                            <label class="col-form-label">District</label>
+                        </div>
+                        <div class="col-lg-8">
+                            {{ form.district }}
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-lg-3">
+                            <label class="col-form-label">Phone</label>
+                        </div>
+                        <div class="col-lg-8">
+                            {{ form.phone }}
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-lg-3">
+                        </div>
+                        <div class="col-lg-8">
+                            <a href="{% url 'Dashboard:all-customer' %}" class="btn btn-warning">Back</a>
+                            <input class="btn btn-primary" type="submit" value="Submit">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

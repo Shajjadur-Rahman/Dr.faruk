@@ -1,0 +1,48 @@
+	{% extends 'base/base.html' %}
+	{% load static %}
+	{% block title_block %} All tasks schedule {% endblock %}
+	{% block content_block %}
+	<!-- partial -->
+	<div class="row grid-margin">
+		<div class="col-lg-12 stretch-card">
+		  <div class="card">
+		   {% if messages %}
+			{% for message in messages %}
+			<div {% if message.tags %} class="alert alert-{{ message.tags }} {% endif %}" role="alert">
+				{{ message }}
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			</div>
+			{% endfor %}
+			{% endif %}
+			<div class="card-body">
+			  <h4 class="card-title text-center">All tasks schedule</h4>
+				<hr>
+			  <div class="table-responsive mt-4">
+			  <a href="{% url 'task:create-task' %}" class="btn btn-info float-right" title="Click to create new task">Create</a>
+			  <a href="{% url 'task:show-completed-tasks' %}" class="btn btn-success float-right mr-2" title="Click to view completed task">View</a>
+				<table class="table table-bordered">
+				  <thead>
+					<tr>
+					  <th>Task</th>
+					  <th>Date</th>
+					</tr>
+				  </thead>
+				  <tbody>
+				  {% for task in all_tasks %}
+					<tr class="table-info">
+					   <td style="width:60%;"><a href="{% url 'task:task-detail' task_id=task.pk %}">{{ task.sliced_task_description }}</a></td>
+					   <td>{{ task.task_start }} &nbsp; &nbsp; | &nbsp; &nbsp; ( {{ task.task_start|timeuntil }} )</td>
+					</tr>
+					{% empty %}
+					<tr class="table-info text-center">
+						<td colspan="3">No task available !</td>
+					</tr>
+					{% endfor %}
+				  </tbody>
+				</table>
+			  </div>
+			</div>
+		  </div>
+		</div>
+	</div>
+	{% endblock %}

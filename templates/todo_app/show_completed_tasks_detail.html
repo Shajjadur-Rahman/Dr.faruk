@@ -1,0 +1,79 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block title_block %} Completed task detail.... {% endblock %}
+{% block content_block %}
+<!-- partial -->
+<div class="row grid-margin">
+	<div class="col-12">
+		<div class="card">
+			{% if messages %}
+			{% for message in messages %}
+			<div {% if message.tags %} class="alert alert-{{ message.tags }} {% endif %}" role="alert">
+				{{ message }}
+				<button type="button" value="{{ task.pk }}" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			</div>
+			{% endfor %}
+			{% endif %}
+			<div id="card_body" class="card-body{% if task.status == 'Completed' %} bg-dark text-light{% endif %}">
+				<h4 id="card_heading" class="card-title{% if task.status == 'Completed' %} text-light{% endif %}">Task detail</h4>
+				<p>{{ task.task|linebreaks }}</p>
+				<p>{{ task.task_start }} &nbsp; &nbsp; | &nbsp; &nbsp; ( {{ task.task_start|timeuntil }} )</p>
+				<a href="{% url 'task:show-completed-tasks' %}" class="btn btn-primary">Back</a>
+				{% if task.status == 'Completed' %}
+				<a href="{% url 'task:delete-task' task_id=task.pk %}" id="remove_btn" class="btn btn-warning float-right">Delete</a>
+				{% else %}
+				<button id="complete_btn" onclick="complete({{task.pk}})" class="btn btn-warning float-right">Complete</button>
+				{% endif %}
+			</div>
+		</div>
+	
+	</div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+
+  var csrf_token = getCookie('csrftoken');
+  var complete_btn = document.querySelector('#complete_btn')
+  var remove_btn = document.querySelector('#remove_btn')
+  var card_body = document.querySelector('#card_body')
+  var card_heading = document.querySelector('#card_heading')
+
+   function complete(task_id){
+      taskComplete(task_id)
+      card_body.setAttribute('class', 'card-body bg-dark text-light');
+      card_heading.setAttribute('class', 'text-light');
+      complete_btn.style.display = 'none';
+  }
+
+      function taskComplete(task_id){
+        url = 'http://127.0.0.1:8000/task/task_complete/'
+        fetch(url, {
+                method: 'POST',
+                headers: {
+                 'Content-Type': 'application/json',
+                 'X-CSRFToken': csrf_token,
+                 },
+                 body:JSON.stringify({'task_id': task_id}),
+            })
+      }
+
+</script>
+{% endblock %}

@@ -1,0 +1,59 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block title_block %} Sold info in {{ month_n }} {% endblock %}
+{% block content_block %}
+<div class="row">
+    <div class="col-lg-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title text-center">Sold info in <span class="badge badge-success">{{ month_n }}</span> </h4>
+                <hr>
+                <div class="table-responsive mt-4">
+                    <table class="table">
+                        <thead>
+                        <tr style="background:#7f868a; color:#fff;">
+                            <th>Product</th>
+                            <th>Status</th>
+                            <th colspan="2">( Qty * Price ) - Discount = Total</th>
+                            <th>Rest</th>
+                            <th>Paid</th>
+                            <th>Date</th>
+                            <th>
+                                <a href="{% url 'Balance:balance' %}" class="badge badge-danger float-right ml-2">Back</a>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for product in sold_products %}
+                        <tr style="background:#dee1e3;{% if product.sell_status == 'Paid' %}background:#6b5c68{% endif %}"  title="Sold by ' {{ product.sold_by }} '">
+                            <td>{{ product.name }}</td>
+                            <td>{{ product.sell_status }}</td>
+                            <td colspan="2">( {{ product.quantity }} * {{ product.price }} ) - {{ product.total_discount }} = {{ product.total_price }}</td>
+                            <td>{{ product.rest_price }}</td>
+                            <td style="{% if product.total_paid %}background:#7f868a; color:#fff;{% endif %}">{{ product.total_paid }}</td>
+                            <td>{{product.created|date:'SHORT_DATE_FORMAT'}} {{product.created|time:'h:i a'}}</td>
+                            <td>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="7">No purchasing information of " {{ customer_name.name }} "  {% if sell_status %} on {{ input_date_start }} of {{ sell_status }} sell {% endif %}</td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                        <tfoot>
+                        <tr style="background:#7f868a; color:#fff;">
+                            <td colspan="2">TOTAL ( {{ total_sold }} )</td>
+                            <td colspan="2">TOTAL DUE {{ total_due }}</td>
+                            <td colspan="3">REST {{ total_due }} - {{ total_paid }} = {{ due_remaining }}</td>
+                            <td>PAID {{ total_paid }}</td>
+                        </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}>

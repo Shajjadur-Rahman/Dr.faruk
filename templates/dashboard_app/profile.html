@@ -1,0 +1,60 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title_block %}{% if profile.profile.username %}{{ profile.profile.username }}{% else %}{{ profile }}{% endif %}'s profile {% endblock %}
+
+{% block content_block %}
+<div class="row">
+    <div class="col-lg-12 grid-margin stretch-card">
+        <div class="card">
+            {% if messages %}
+            {% for message in messages %}
+            <div {% if message.tags %} class="alert alert-{{ message.tags }} {% endif %}" role="alert">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            {% endfor %}
+            {% endif %}
+            <div class="card-body">
+                <h4 class="card-title">{% if profile.profile.username %}{{ profile.profile.username }}{% else %}{{ profile }}{% endif %}'s profile </h4>
+                {% if profile.profile.image %}
+                <img src="{{ profile.profile.image.url }}" alt="{{ profile.email }}" width="100px" height="120px">
+                {% else %}
+                <img src="{% static 'p_default_image/profile.jpg'%}" alt="Profile Image" width="100px" height="100px">
+                {% endif %}
+                <div class="mt-4">
+                    <hr>
+                    <table width="40%" class=" mt-4 mb-4">
+                        <tr>
+                            <td>Name : </td>
+                            <td>{{ profile.profile.username }}</td>
+                        </tr>
+                        <tr>
+                            <td>Email : </td>
+                            <td>{{ profile.email }}</td>
+                        </tr>
+                        <tr>
+                            <td>Designation : </td>
+                            <td>{{ profile.groups.all.0.name }}</td>
+                        </tr>
+                        <tr>
+                            <td>Mobile : </td>
+                            <td>{{ profile.profile.mobile_no }}</td>
+                        </tr>
+                        <tr>
+                            <td>Facebook : </td>
+                            <td><a href="{{ profile.profile.fb_id }}" target="_blank">Visit facebook profile</a></td>
+                        </tr>
+                    </table>
+                    {% if request.user.is_superuser %}
+                    <a href="{% url 'Dashboard:all-employees' %}" class="btn btn-warning">Back</a>
+                    {% endif %}
+                    {% if request.user.email == profile.email %}
+                    <a href="{% url 'Login_app:edit-profile' user_id=profile.pk %}" class="btn btn-primary">Update</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

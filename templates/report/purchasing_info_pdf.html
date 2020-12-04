@@ -1,0 +1,65 @@
+
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Report of {{ customer.name }}</title>
+	
+	<style>
+	
+	
+	</style>
+</head>
+
+<body>
+
+
+<span>Customer  : {{ customer.name }}</span><br>
+<span>Village : {{ customer.village }}</span><br>
+<span>PS : {{ customer.ps }}</span><br>
+<span>District : {{ customer.district }}</span><br>
+<span>Phone : {{ customer.phone }}</span><br>
+<span>Shade No : {{ shade_num }}</span><br>
+
+<table border="1" style="text-align:center;">
+	<thead>
+	<tr style="padding:5px 0;">
+		<th>Product</th>
+		<th>Status</th>
+		<th colspan="2">( Qty * Price ) - Discount = Total</th>
+		<th>Rest</th>
+		<th>paid</th>
+		<th>payment-date</th>
+	</tr>
+	</thead>
+	<tbody>
+	{% for product in products %}
+	<tr style="padding:4px 0;">
+		<td>{{ product.name }}</td>
+		<td>{{ product.sell_status }}</td>
+		<td colspan="2">( {{ product.quantity }} * {{ product.price }} ) - {{ product.discount_per_unit}} = {{ product.total_price }}</td>
+		<td>{{ product.rest_price }}</td>
+		<td>{{ product.total_paid }}</td>
+		<td>{{product.created|date:'SHORT_DATE_FORMAT'}} {{product.created|time:'h:i a'}}</td>
+	</tr>
+	{% empty %}
+	<tr>
+		<td colspan="7">No purchasing information of " {{ customer_name.name }} "  {% if sell_status %} on {{ input_date_start }} of {{ sell_status }} sell {% endif %}</td>
+	</tr>
+	{% endfor %}
+	</tbody>
+	<tfoot>
+	<tr style="padding:5px 0;">
+		<td colspan="2">TOTAL ( {{ total_pro }} )</td>
+		<td colspan="2">DUE ( {{ total_due }} )</td>
+		<td colspan="2">REST {{ total_pro }} - {{ total_paid }} = {{ due_remaining }}</td>
+		<td colspan="1">PAID {{ total_paid }}</td>
+	</tr>
+	</tfoot>
+</table>
+
+<br>
+<span>Report at : {{ report_date }}</span><br>
+<span>Report by : {{ report_by }}</span><br>
+
+</body>
+</html>

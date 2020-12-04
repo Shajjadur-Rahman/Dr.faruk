@@ -1,0 +1,80 @@
+
+{% load static %}
+<div id="right-sidebar" class="settings-panel">
+	<i class="settings-close mdi mdi-close"></i>
+	<ul class="nav nav-tabs" id="setting-panel" role="tablist">
+		<li class="nav-item">
+			<a class="nav-link active" id="todo-tab" data-toggle="tab" href="#todo-section" role="tab" aria-controls="todo-section" aria-expanded="true">TO DO LIST</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link" id="chats-tab" data-toggle="tab" href="#chats-section" role="tab" aria-controls="chats-section">CHATS</a>
+		</li>
+	</ul>
+	<div class="tab-content" id="setting-content">
+		<div class="tab-pane fade show active scroll-wrapper" id="todo-section" role="tabpanel" aria-labelledby="todo-section">
+			<div class="add-items px-3 mb-0">
+				<a href="{% url 'task:create-task' %}" class="btn btn-primary btn-block">Create</a>
+			</div>
+			<div class="list-wrapper px-3">
+				<ul class="d-flex flex-column-reverse todo-list">
+					{% for task in tasks %}
+					<li>
+						<div class="form-check">
+							<label class="form-check-label">
+								<input class="checkbox" type="checkbox">
+								{{ task.task }} || start on {{ task.task_start }}
+							</label>
+						</div>
+						
+						<i class="remove mdi mdi-close-circle-outline"></i>
+					</li>
+					{% empty %}
+					<li>
+						<div class="form-check">
+							<label class="form-check-label">
+								<input class="checkbox" type="checkbox">
+								No schedule task yet !
+							</label>
+						</div>
+						<i class="remove mdi mdi-close-circle-outline"></i>
+					</li>
+					{% endfor %}
+				</ul>
+				<a href="{% url 'task:all-tasks-schedule' %}">See more</a>
+			</div>
+		</div>
+		<!-- To do section tab ends -->
+		<div class="tab-pane fade" id="chats-section" role="tabpanel" aria-labelledby="chats-section">
+			<div class="d-flex align-items-center justify-content-between border-bottom">
+				<p class="settings-heading border-top-0 mb-3 pl-3 pt-0 border-bottom-0 pb-0">Employee</p>
+				<small class="settings-heading border-top-0 mb-3 pt-0 border-bottom-0 pb-0 pr-3 font-weight-normal"><a
+						href="{% url 'Message:inbox' %}">See All</a></small>
+			</div>
+			<ul class="chat-list">
+				{% for a_user in active_users %}  <!-- active_users came from context processor -->
+				{% if a_user.profile.is_online %}
+				<li class="list active">
+					<div class="profile"><img src="{% if a_user.profile.image %}{{ a_user.profile.image.url }}{% else %}{% static 'p_default_image/profile.jpg' %}{% endif %}" alt="{% if a_user.profile.image %}{{ a_user.profile.username }}{% else %}Profile image{% endif %}"><span class="online"></span></div>
+					<div class="info">
+						<p>{{ a_user.email }}</p>
+						<p>Available</p>
+					</div>
+				</li>
+				{% else %}
+				<li class="list">
+					<div class="profile"><img src="{% if a_user.profile.image %}{{ a_user.profile.image.url }}{% else %}{% static 'p_default_image/profile.jpg' %}{% endif %}" alt="{% if a_user.profile.image %}{{ a_user.profile.username }}{% else %}Profile image{% endif %}"><span class="offline"></span></div>
+					<div class="info">
+						<div class="wrapper d-flex">
+							<p>{{ a_user.email }}</p>
+						</div>
+						<p>Away</p>
+					</div>
+				</li>
+				{% endif %}
+				{% endfor %}
+			</ul>
+		</div>
+		<!-- chat tab ends -->
+	</div>
+</div>
+<!-- partial -->

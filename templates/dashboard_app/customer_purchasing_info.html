@@ -1,0 +1,100 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block title_block %} {{ customer_name }}'s purchasing info {% endblock %}
+{% block content_block %}
+<div class="row">
+    <div class="col-lg-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                {% if messages %}
+                {% for message in messages %}
+                <div {% if message.tags %} class="alert alert-{{ message.tags }} {% endif %}" role="alert">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                {% endfor %}
+                {% endif %}
+
+                <h4 class="card-title">{{ customer_name.name }}'s purchasing info </h4>
+                <h4 class="card-title">Shade No : {{ shade.shade_num }}</h4>
+                <h4 class="card-title">{{ customer_name.get_customer_info }}</h4>
+                <form class="form-inline" method="POST" action="">{% csrf_token %}
+                    <table class="table" style="background:#5f6568; width:100%;">
+                        <tr>
+                            <td>{{ form.sell_status }}</td>
+                            <td><div class="input-group date" id="datetimepicker1" data-target-input="nearest">
+                                <input type="text" name="start_date" value="{{ request.POST.start_date }}" class="form-control datetimepicker-input" data-target="#datetimepicker1" placeholder="Search by date" required/>
+                                <div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker">
+                                    <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                                </div>
+                            </div></td>
+                            <td><button type="submit" class="btn btn-m btn-danger"><i class="fas fa-search"></i></button></td>
+                            <td><a href="{% url 'Dashboard:purchasing_info_pdf_report' shade_id=shade.pk shade_num=shade.shade_num customer_id=customer_id %}" target="_blank" class="btn btn-m btn-danger float-right ml-2"><i class="fas fa-print"></i></a>
+                                <a href="{% url 'Dashboard:customer-purchasing-info' shade_id=shade_id customer_id=customer_id %}" class="btn btn-m btn-danger float-right"><i class="fas fa-sync-alt"></i></a></td>
+                        </tr>
+                    </table>
+                </form>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                        <tr style="background:#7f868a; color:#fff;">
+                            <th>Product</th>
+                            <th>Status</th>
+                            <th colspan="2">( Qty * Price ) - Discount = Total</th>
+                            <th>Rest</th>
+                            <th>Paid</th>
+                            <th>Date</th>
+                            <th>
+                                {% if shade.active == False %}
+                                <a href="{% url 'Dashboard:expired-shades' customer=customer_name customer_id=customer_id %}" class="badge badge-danger float-right ml-2">Back</a>
+                                {% else %}
+                                <a href="{% url 'Dashboard:all-shades' customer=customer_name customer_id=customer_id %}" class="badge badge-danger float-right ml-2">Back</a>
+                                {% endif %}
+                                <a href="{% url 'Dashboard:sell-product' shade_id=shade_id customer_id=customer_id %}" class="badge badge-success float-right">Sell</a>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for product in products %}
+                        <tr style="background:#dee1e3;{% if product.sell_status == 'Paid' %}background:#6b5c68{% endif %}"  title="Sold by ' {{ product.sold_by }} '">
+                            <td><a href="{% url 'Dashboard:few-payment-history' shade_num=shade.shade_num shade_id=shade_id customer_id=product.customer.pk product_id=product.pk customer_name=product.customer.name %}">{{ product.name }}</a></td>
+                            <td>{{ product.sell_status }}</td>
+                            <td colspan="2">( {{ product.quantity }} * {{ product.price }} ) - {{ product.total_discount }} = {{ product.total_price }}</td>
+                            <td>{{ product.rest_price }}</td>
+                            <td style="{% if product.total_paid %}background:#7f868a; color:#fff;{% endif %}">{{ product.total_paid }}</td>
+                            <td>{{product.created|date:'SHORT_DATE_FORMAT'}} {{product.created|time:'h:i a'}}</td>
+                            <td>
+                                {% if product.sell_status == 'Due' %}
+                                {% if product.rest_price %}
+                                <a href="{% url 'Dashboard:few-payment' shade_id=product.shade.pk product_id=product.pk customer_id=product.customer.pk product_name=product.name %}" class="badge badge-success float-right ml-1">Pay</a>
+                                {% endif %}
+                                {% endif %}
+                                <a href="{% url 'Dashboard:delete-sold-product' shade_id=product.shade.pk product_id=product.pk customer_id=product.customer.pk %}" onclick="return confirm('Are you sure to delete {{ product.product }} product ?')" class="badge badge-danger float-right ml-1"><i class="fas fa-trash"></i></a>
+                                {% if product.total_paid == 0 %}
+                                <a href="{% url 'Dashboard:edit-sold-product' shade_id=product.shade.pk product_id=product.pk customer_id=product.customer.pk %}" class="badge badge-{% if product.rest_price == 0.0 %}warning{% else %}success{% endif %} float-right"><i class="fas fa-edit"></i></a>
+                                {% endif %}
+
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="7">No purchasing information of " {{ customer_name.name }} "  {% if sell_status %} on {{ input_date_start }} of {{ sell_status }} sell {% endif %}</td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                        <tfoot>
+                        <tr style="background:#7f868a; color:#fff;">
+                            <td colspan="2">TOTAL ( {{ total_product_price }} )</td>
+                            <td colspan="2">TOTAL DUE {% if due_remaining %}{{ due_remaining }}{% else %}{{ total_due }}{% endif %}</td>
+                            <td colspan="3">REST {{ total_due }} - {{ total_paid }} = {{ due_remaining }}</td>
+                            <td>PAID {{ total_paid }}</td>
+                        </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}>

@@ -1,0 +1,62 @@
+
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Expenses report of {{ month_n }}</title>
+
+
+</head>
+
+<body>
+
+
+<span>Company  : Dr. Faruq Hossain Poultry firm </span><br>
+<span>Zone : Shukurer Hat</span><br>
+<span>PS : Mithapukur</span><br>
+<span>District : Rangpur</span><br>
+<span>Phone : 017XXXXXXXX</span><br>
+<span>Email : faruk@gamil.com</span><br>
+<span>Month : {{ month_n }}</span><br>
+<span>Date : {{ report_date }}</span><br>
+
+<table border="1" style="text-align:center;">
+	<thead>
+	<tr style="padding:5px 0">
+		<th>Expense Type</th>
+		<th>Ex-amount</th>
+		<th>Ex-Date</th>
+		<th>Created By</th>
+	</tr>
+	</thead>
+	<tbody>
+	{% for expense in expenses %}
+	<tr style="padding:4px 0;">
+		<td>{{ expense.expense_type }}</td>
+		<td>{{ expense.expense_amount }}</td>
+		<td>{{ expense.created_at }}</td>
+		<td>{{ expense.created_by }}</td>
+	</tr>
+	{% empty %}
+	<tr>
+		<td>None</td>
+		<td>None</td>
+		<td>None</td>
+		<td>None</td>
+	</tr>
+	{% endfor %}
+	</tbody>
+	<tfoot>
+	<tr style="padding:5px 0">
+		<td>Total</td>
+		<td>{{ total_expense }}</td>
+		<td colspan="2"></td>
+	</tr>
+	</tfoot>
+</table>
+
+<br>
+<span>Report at : {{ report_date }}</span><br>
+<span>Report by : {{ report_by }}</span><br>
+
+</body>
+</html>

@@ -1,0 +1,181 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title_block %} Invoice related all product {% endblock %}
+
+{% block content_block %}
+<div class="row">
+	<div class="col-lg-12 grid-margin stretch-card">
+		<div class="card">
+			{% if messages %}
+			{% for message in messages %}
+			<div {% if message.tags %} class="alert alert-{{ message.tags }} {% endif %}" role="alert">
+				{{ message }}
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			</div>
+			{% endfor %}
+			{% endif %}
+			<div class="card-body">
+				<h4 class="card-title text-center">All products (Invoice = {{ invoice.invoice_no }})</h4>
+				<h4 class="card-title text-center">Imported on : {{ invoice.date }} | {{ invoice.date|timesince }} ago </h4>
+				<hr>
+				<div class="table-responsive mt-4">
+					<table class="table mt-3 border-top">
+						<thead>
+						<tr class="bg-info">
+							<th>Product ( {{ total }} )</th>
+							<th>Rate</th>
+							<th>Qty</th>
+							<th>Total</th>
+							<th>Supplier</th>
+							<th>Adding time</th>
+							<th>
+								{% if invoice.active == False %}
+								<a href="{% url 'Inventory:previous-invoice' %}" class="badge badge-warning float-right" title="Click to back previous page">Back</a>
+								{% else %}
+								<a href="{% url 'Inventory:all-invoice' %}" class="badge badge-warning float-right" title="Click to back previous page">Back</a>
+								{% endif %}
+							</th>
+						</tr>
+						</thead>
+						<tbody>
+						{% for product in invoice_products %}
+						<tr style="background:#e8e8e8;">
+							<td>{{ forloop.counter }} . {{ product.product_name }}</td>
+							<td>{{ product.rate }}</td>
+							<td>{{ product.quantity }} {{ product.unit_tag }}</td>
+							<td>{{ product.total_price }}</td>
+							<td>{{ product.supplier }}</td>
+							<td>{{ product.date|date:"d/m/y" }}--{{ product.date|time:"h:i:s a" }}</td>
+							<td>
+								{% if product.invoice.active == True %}
+								<a href="{% url 'Inventory:delete-product' product_id=product.pk product_no=product.product_no %}" onclick="return confirm('Are you sure to delete {{ product.product }} product ?')" class="badge badge-danger float-right ml-1" title="Click to delete this item"><i class="fas fa-trash"></i></a>
+								<a href="{% url 'Inventory:edit-product' product_id=product.pk product_no=product.product_no %}" class="badge badge-warning float-right ml-2" title="Click to edit this item"><i class="fas fa-edit"></i></a>
+								{% endif %}
+							</td>
+						</tr>
+						{% empty %}
+						<tr>
+							<td>None</td>
+							<td>None</td>
+							<td>None</td>
+							<td>None</td>
+							<td>None</td>
+							<td>None</td>
+							<td></td>
+						</tr>
+						{% endfor %}
+						</tbody>
+						<tfoot>
+						<tr style="background:#a8a8a8;">
+							<td>{{ total }}</td>
+							<td></td>
+							<td></td>
+							<td>{{ total_amount }}</td>
+							<td>{{ total_price }}</td>
+							<td></td>
+							<td></td>
+						</tr>
+						</tfoot>
+					</table>
+				</div>
+				<nav>
+					<ul class="pagination rounded-separated pagination-danger">
+						{% if customers.has_previous %}
+						<li class="page-item"><a class="page-link" href="?page={{ customers.previous_page_number }}"><i class="mdi mdi-chevron-left"></i></a></li>
+						{% endif %}
+						{% for num in customers.paginator.page_range %}
+						{% if customers.number == num %}
+						<li class="page-item active"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+						{% else %}
+						<li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+						{% endif %}
+						{% endfor %}
+						{% if customers.has_next %}
+						<li class="page-item"><a class="page-link" href="?page={{ customers.next_page_number }}"><i class="mdi mdi-chevron-right"></i></a></li>
+						{% endif %}
+					</ul>
+				</nav>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel">Add new product under invoice no {{ invoice.invoice_no }} </h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<form action="" method="POST">{% csrf_token %}
+				<div class="modal-body">
+					<div class="form-group select_product">
+						<label for="id_select_product" class="col-form-label">Select Product:</label>
+						<div class="d-flex">
+							<select class="form-control" name="select_product">
+								<option selected disabled>Click this to select product</option>
+								{% for product in invoice_products %}
+								<option>{{ product.product|capfirst }}</option>
+								{% endfor %}
+							</select>
+							<input type="button" value="New" class="btn btn-success btn-sm float-right ml-2" onclick="addNewProduct()"></div>
+					</div>
+					
+					<div class="form-group d-none new_product">
+						<label for="id_product_name" class="col-form-label">Product:</label>
+						{% if form.errors %}
+						<p class="text-danger">This Product name already exists ! Add another Product........</p>
+						{% endif %}
+						{{ form.product_name }}
+					</div>
+					<div class="form-group">
+						<label for="id_rate" class="col-form-label">Rate:</label>
+						{{ form.rate }}
+					</div>
+					<div class="form-group">
+						<label for="id_quantity" class="col-form-label">Quantity:</label>
+						{{ form.quantity }}
+					</div>
+					<div class="form-group">
+						<label for="id_unit_tag" class="col-form-label">Unit label tag:</label>
+						{{ form.unit_tag }}
+					</div>
+					<div class="form-group">
+						<label for="id_supplier" class="col-form-label">Supplier:</label>
+						{{ form.supplier }}
+					</div>
+				
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+					<input class="btn btn-primary" type="submit" value="Submit">
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+
+{% endblock %}
+
+{% block script %}
+
+<script>
+
+  var select_product = document.querySelector('.select_product')
+  var new_product = document.querySelector('.new_product')
+
+  function addNewProduct(){
+    select_product.setAttribute('class', 'd-none')
+    new_product.setAttribute('class', 'form-group')
+  }
+
+
+</script>
+
+{% endblock %}

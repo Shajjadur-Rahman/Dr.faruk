@@ -1,0 +1,16 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block title_block %} Not authorised {% endblock %}
+
+{% block content_block %}
+          <div class="row">
+            <div class="col-lg-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title"> Sorry <span class="badge badge-danger">{% if request.user.profile.username %}{{ request.user.profile.username|capfirst }}{% else %}{{ request.user.email }}{% endif %}</span>, You are not authorised to view / perform this action ! You are restricted mode right now ! Please contact with your super admin ....
+                      <a href="{% url 'Message:inbox' %}">Contact</a></h4>
+                </div>
+              </div>
+            </div>
+          </div>
+{% endblock %}
