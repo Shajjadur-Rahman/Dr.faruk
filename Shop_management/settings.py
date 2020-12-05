@@ -16,9 +16,9 @@ MEDIA_DIR = BASE_DIR / 'media'
 SECRET_KEY = '_=)o-=&uj@*gi46h^^sweb-&4qt2y)t!ya2lx7b@1yx(t)9z^)'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['67.205.162.114','faruk.hamzazahid.com','www.faruk.hamzazahid.com']
 
 
 # Application definition
@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'phonenumber_field',
     'rest_framework',
     'crispy_forms',
+    'django_cleanup',
 
 
     'Login_app',
@@ -76,7 +77,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
 
-                #'Dashboard_app.context_processors.user_role',
+                'Dashboard_app.context_processors.user_role',
                 'Dashboard_app.context_processors.today_all_payments',
                 'Todo_app.context_processors.all_tasks',
                 'Message_app.context_processors.unread_messages',
