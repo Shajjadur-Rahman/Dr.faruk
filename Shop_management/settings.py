@@ -76,7 +76,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
 
-                'Dashboard_app.context_processors.user_role',
+                #'Dashboard_app.context_processors.user_role',
                 'Dashboard_app.context_processors.today_all_payments',
                 'Todo_app.context_processors.all_tasks',
                 'Message_app.context_processors.unread_messages',
@@ -97,8 +97,12 @@ WSGI_APPLICATION = 'Shop_management.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'faruk',
+        'USER': 'shajjad',
+        'PASSWORD': 'shajjad2015',
+        'HOST': 'localhost',
+        'PORT': '',
     }
 }
 
@@ -154,17 +158,17 @@ LOGIN_URL = '/account/login'
 
 
 # celery app
-REDIS_HOST = 'localhost'
+# REDIS_HOST = 'localhost'
 
-CELERY_BROKER_URL = 'redis://:p2e249ee785968eb914d440c05326b4a0a9df8d71e4415413e861902b45917e6d@ec2-18-214-6-8.compute-1.amazonaws.com:13069'
+# CELERY_BROKER_URL = 'redis://:p2e249ee785968eb914d440c05326b4a0a9df8d71e4415413e861902b45917e6d@ec2-18-214-6-8.compute-1.amazonaws.com:13069'
 
-CELERY_BEAT_SCHEDULE = {
-    'call-fn': {
-        'task': 'Product_record_for_final_calculation_app.tasks.update_balance_sheet',
-        'schedule': 5,
-        'args': [2]
-    }
-}
+# CELERY_BEAT_SCHEDULE = {
+#     'call-fn': {
+#         'task': 'Product_record_for_final_calculation_app.tasks.update_balance_sheet',
+#         'schedule': 5,
+#         'args': [2]
+#     }
+# }
 
 
 
