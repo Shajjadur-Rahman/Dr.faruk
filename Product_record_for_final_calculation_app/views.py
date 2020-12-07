@@ -1,29 +1,26 @@
 from django.contrib import messages
 from django.core.paginator import Paginator
-from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from django.urls import reverse
 from datetime import date, datetime
-from .forms import AddNewExpenseForm, BalanceYearForm
-from time import sleep
+from .forms import AddNewExpenseForm
 from .models import BalanceSheet, BalanceYear, Expense, ExpenseYear
 from Dashboard_app.models import Product
 from Product_inventory_app.models import StockHistory
 from django.contrib.auth.decorators import login_required
 from Dashboard_app.decorators import allowed_users
-import math
 
 
-def update_balance_sheet():
+
+def update_balance_sheet(month, year):
     today = date.today()
-    current_month_sold = Product.objects.filter(created__month=today.month)
+    current_month_sold = Product.objects.filter(created__month=month, created__year=year)
     total_sold = round(sum(item.total_price for item in current_month_sold), 2)
     sold_qty = sum(item.quantity for item in current_month_sold)
-    current_month_imported = StockHistory.objects.filter(date__month=today.month)
+    current_month_imported = StockHistory.objects.filter(date__month=month, date__year=year)
     total_import = round(sum(item.total_price for item in current_month_imported), 2)
     import_qty = sum(item.quantity for item in current_month_imported)
-    expenses = Expense.objects.filter(created_at__month=today.month)
+    expenses = Expense.objects.filter(created_at__month=month, created_at__year=year)
     total_expense = round(sum(ex.expense_amount for ex in expenses), 2)
 
     try:
@@ -103,10 +100,10 @@ def daily_expense(request):
 
 @login_required
 @allowed_users(allowed_roles=['Admin', 'Accountant', 'Manager'])
-def expense_in_month(request, month_n, month):
+def expense_in_month(request, month_n, month, year):
     form = AddNewExpenseForm()
-    expenses = Expense.objects.filter(month=month)
-    context = {'expenses': expenses, 'month_n': month_n, 'month': month, 'form': form}
+    expenses = Expense.objects.filter(month=month, created_at__year=year)
+    context = {'expenses': expenses, 'month_n': month_n, 'month': month, 'year': year, 'form': form}
     return render(request, 'balance_sheet/expense_in_month.html', context)
 
 
@@ -135,7 +132,7 @@ def add_new_expense(request):
                 instance.created_at = format_date
                 instance.save()
 
-            update_balance_sheet()  # this function called to update balance sheet
+            update_balance_sheet(instance.created_at.month, instance.created_at.year)  # this function called to update balance sheet
             messages.success(request, 'Expense added !')
             return HttpResponseRedirect(url)
     context = {'form': form}
@@ -148,6 +145,7 @@ def delete_expense(request, ex_id):
     url = request.META.get('HTTP_REFERER')
     try:
         expenses = Expense.objects.get(pk=ex_id)
+        expenses_date = expenses.created_at
     except Exception as e:
         messages.warning(request, 'Query does not exists !!')
         return HttpResponseRedirect(url)
@@ -160,7 +158,7 @@ def delete_expense(request, ex_id):
                                       'This expense related to product import invoice !!')
             return HttpResponseRedirect(url)
     expenses.delete()
-    update_balance_sheet()  # this function called to update balance sheet
+    update_balance_sheet(expenses_date.month, expenses_date.year)  # this function called to update balance sheet
     messages.warning(request, 'Expense deleted !!')
     return HttpResponseRedirect(url)
 

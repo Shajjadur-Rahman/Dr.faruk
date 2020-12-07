@@ -22,7 +22,7 @@
 			</div>
 			<div class="message-body">
 				<div class="sender-details">
-					<img class="img-sm rounded-circle mr-3" src="{% if msg.profile.image %}{{ msg.profile.image.url }}{% else %}{% static 'p_default_image/profile.jpg' %}{% endif %}" alt="Image not fount">
+					<img class="img-sm rounded-circle mr-3" src="{% if msg.sender.profile.image %}{{ msg.sender.profile.image.url }}{% else %}{% static 'p_default_image/profile.jpg' %}{% endif %}" alt="Image not fount">
 					<div class="details">
 						<p class="msg-subject">
 							{{ msg.sent_at|timesince }} ago .

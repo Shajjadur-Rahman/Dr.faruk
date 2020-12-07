@@ -1,4 +1,3 @@
-from datetime import datetime
 from Dashboard_app.decorators import allowed_users
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -10,6 +9,7 @@ from django.template.loader import get_template
 from django.urls import reverse
 from xhtml2pdf import pisa
 
+from datetime import date, datetime
 from .models import Stock, StockHistory, ImportInvoice
 from Dashboard_app.models import Product
 from Product_record_for_final_calculation_app.models import Expense, ExpenseYear
@@ -126,7 +126,7 @@ def add_invoice(request):
                                       expense_amount=instance.expense_amount,
                                       created_by=request.user, created_at=instance.date)
                 expense_obj.save()
-            update_balance_sheet()  # this function called to update balance sheet
+            update_balance_sheet(instance.date.month, instance.date.year)  # this function called to update balance sheet
             messages.success(request, f'{instance.invoice_no} invoice created !!')
             return HttpResponseRedirect(reverse('Inventory:all-invoice'))
     context = {'form': form}
@@ -148,7 +148,7 @@ def edit_invoice(request, invoice_id):
             invoice_instance = form.save(commit=False)
             invoice_instance.save()
             invoice_expense(invoice.invoice_no, invoice_instance)  # this function called to update balance sheet
-            update_balance_sheet()  # this function called to update balance sheet
+            update_balance_sheet(invoice.date.month, invoice.date.year)  # this function called to update balance sheet
             messages.success(request, 'Invoice updated !')
             if invoice.active:
                 return HttpResponseRedirect(reverse('Inventory:all-invoice'))
@@ -172,10 +172,12 @@ def delete_invoice(request, invoice_id):
         messages.warning(request, 'Query does not exists !')
         return HttpResponseRedirect(url)
     messages.warning(request, f'{invoice.invoice_no} no invoice deleted !')
-    delete_invoice_expense(invoice.invoice_no)  # this function called to delete invoice expense which added
+    try:
+        delete_invoice_expense(invoice.invoice_no)  # this function called to delete invoice expense which added
+    except Exception as e:
+        pass
     # in Expense Table
     invoice.delete()
-    update_balance_sheet()  # this function called to update balance sheet
     return HttpResponseRedirect(url)
 
 
@@ -220,9 +222,12 @@ def all_imports_current_year(request, year):
 
 @login_required
 @allowed_users(allowed_roles=['Admin', 'Accountant', 'Manager'])
-def all_imports_current_month(request, month_n, month):
-    products = StockHistory.objects.filter(date__month=month)
-    context = {'products': products, 'month_n': month_n, 'month': month}
+def all_imports_current_month(request, month_n, month, year):
+    products = StockHistory.objects.filter(date__month=month, date__year=year)
+    total = sum(item.total_price for item in products)
+    total_qty = sum(item.quantity for item in products)
+    context = {'products': products, 'month_n': month_n, 'month': month, 'year': year, 'total': total,
+               'total_qty': total_qty}
     return render(request, 'inventory/all_imports_current_month.html', context)
 
 
@@ -252,7 +257,7 @@ def add_stock_product(request):
             history_obj.quantity = instance.quantity
             history_obj.unit_tag = instance.unit_tag
             history_obj.save()
-            update_balance_sheet()  # this function called to update balance sheet
+            update_balance_sheet(history_obj.date.month, history_obj.date.year)  # this function called to update balance sheet
             messages.success(request, 'Product added !!')
             return HttpResponseRedirect(reverse('Inventory:all-stock-products'))
         form = StockForm(request.POST)
@@ -280,7 +285,6 @@ def delete_stock_product(request, product_no):
         return HttpResponseRedirect(url)
     messages.warning(request, f'{product.product_name} deleted !!')
     product.delete()
-    update_balance_sheet()  # this function called to update balance sheet
     return HttpResponseRedirect(url)
 
 
@@ -297,6 +301,7 @@ def stock_product_detail(request, product_no, product):
 @login_required
 @allowed_users(allowed_roles=['Admin', 'Accountant', 'Manager'])
 def add_existing_product(request, product_id):
+    today = date.today()
     invoice = ImportInvoice.objects.all().first()
     initial = {'invoice': invoice}
     try:
@@ -316,7 +321,7 @@ def add_existing_product(request, product_id):
             product.quantity += instance.quantity
             instance.save()
             product.save()
-            update_balance_sheet()  # this function called to update balance sheet
+            update_balance_sheet(today.month, today.year)  # this function called to update balance sheet
             messages.success(request, f'{product.product_name} quantity updated !!')
             return HttpResponseRedirect(reverse('Inventory:all-stock-products'))
     context = {'form': form, 'product': product}
@@ -368,7 +373,7 @@ def edit_product(request, product_id, product_no):
                 return render(request, 'Inventory/edit_product.html', context)
 
 
-            update_balance_sheet()  # this function called to update balance sheet
+            update_balance_sheet(instance.date.month, instance.date.year)  # this function called to update balance sheet
             messages.success(request, f'{history_product.product_name} updated !!')
             if history_product.invoice.active:
                 return HttpResponseRedirect(reverse('Inventory:stock-product-detail',
@@ -391,6 +396,7 @@ def delete_product(request, product_id, product_no):
     try:
         history_product = StockHistory.objects.get(pk=product_id, product_no=product_no)
         stock_product = Stock.objects.get(product_no=product_no)
+        deleted_date = history_product.date
     except Exception as e:
         messages.warning(request, 'Product query does not exists !!')
         return HttpResponseRedirect(url)
@@ -401,7 +407,7 @@ def delete_product(request, product_id, product_no):
             stock_product.save()
             messages.warning(request, f'Product {history_product.product_name} deleted !')
             history_product.delete()
-            update_balance_sheet()  # this function called to update balance sheet
+            update_balance_sheet(deleted_date.month, deleted_date.year)  # this function called to update balance sheet
             return HttpResponseRedirect(url)
         else:
             messages.warning(request, 'You can not delete this product ! No item qty is available to delete in stock !')
@@ -413,13 +419,13 @@ def delete_product(request, product_id, product_no):
                 messages.warning(request, f'Product {history_product.product_name} deleted !')
                 history_product.delete()
                 stock_product.save()
-                update_balance_sheet()  # this function called to update balance sheet
+                update_balance_sheet(deleted_date.month, deleted_date.year)  # this function called to update balance sheet
                 return HttpResponseRedirect(url)
             else:
                 messages.warning(request, f'Product {history_product.product_name} deleted !')
                 history_product.delete()
                 stock_product.save()
-                update_balance_sheet()  # this function called to update balance sheet
+                update_balance_sheet(deleted_date.month, deleted_date.year)  # this function called to update balance sheet
                 return HttpResponseRedirect(url)
         else:
             messages.warning(request, 'Can not deleted ! Product qty is greater than stock qty or invalid qty !!')

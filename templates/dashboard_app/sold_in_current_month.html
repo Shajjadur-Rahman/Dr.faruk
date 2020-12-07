@@ -1,12 +1,12 @@
 {% extends 'base/base.html' %}
 {% load static %}
-{% block title_block %} Sold info in {{ month_n }} {% endblock %}
+{% block title_block %} Sold info in {{ month_n }} {{ year }} {% endblock %}
 {% block content_block %}
 <div class="row">
     <div class="col-lg-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
-                <h4 class="card-title text-center">Sold info in <span class="badge badge-success">{{ month_n }}</span> </h4>
+                <h4 class="card-title text-center">Sold info in <span class="badge badge-success">{{ month_n }} {{ year }}</span> </h4>
                 <hr>
                 <div class="table-responsive mt-4">
                     <table class="table">

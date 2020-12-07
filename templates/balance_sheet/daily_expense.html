@@ -49,6 +49,10 @@
 								<a href="{% url 'Balance:delete-expense' ex_id=exp.pk %}" onclick="return confirm('Are you sure to delete this expense record ?')" class="badge badge-danger float-right ml-2"><i class="fas fa-trash"></i></a>
 							</td>
 						</tr>
+						{% empty %}
+						<tr>
+							<td colspan="5" class="text-center">No data available ....</td>
+						</tr>
 						{% endfor %}
 						</tbody>
 						<tfoot>
@@ -60,6 +64,15 @@
 						</tr>
 						</tfoot>
 					</table>
+					{% empty %}
+					<table class="table mt-3 border-top text-center">
+						<thead>
+							<tr>
+								<th colspan="4">No data available ......</th>
+							</tr>
+						</thead>
+					</table>
+					
 					{% endfor %}
 				</div>
 				<nav>

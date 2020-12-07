@@ -638,12 +638,12 @@ def sell_product(request, shade_id, customer_id):
                     stock_product.save()
                     product_obj.name = stock_product.product_name
                     product_obj.save()
-                    update_balance_sheet()  # this function called to update balance sheet
+                    update_balance_sheet(product_obj.created.month, product_obj.created.year)  # this function called to update balance sheet
 
                 stock_product.save()
                 product_obj.name = stock_product.product_name
                 product_obj.save()
-                update_balance_sheet()  # this function called to update balance sheet
+                update_balance_sheet(product_obj.created.month, product_obj.created.year)  # this function called to update balance sheet
             else:
                 messages.warning(request, 'Input product qty is greater than stock qty or invalid qty !')
                 form = ProductForm(request.POST)
@@ -691,26 +691,26 @@ def edit_sold_product(request, shade_id, product_id, customer_id):
             instance = form.save(commit=False)
             if sold_qty == instance.quantity:
                 instance.save()
-                update_balance_sheet()  # this function called to update balance sheet
+                update_balance_sheet(product.created.month, product.created.year)  # this function called to update balance sheet
             elif sold_qty > instance.quantity > 0:
                 editable_qty = sold_qty - instance.quantity
                 stock_product.quantity += editable_qty
                 stock_product.save()
                 instance.save()
-                update_balance_sheet()  # this function called to update balance sheet
+                update_balance_sheet(product.created.month, product.created.year)  # this function called to update balance sheet
             else:
                 editable_qty = instance.quantity - sold_qty
                 if editable_qty <= stock_qty and instance.quantity > 0:
                     stock_product.quantity -= editable_qty
                     stock_product.save()
                     instance.save()
-                    update_balance_sheet()  # this function called to update balance sheet
+                    update_balance_sheet(product.created.month, product.created.year)  # this function called to update balance sheet
                 else:
                     messages.warning(request, 'Invalid input product qty !!!!!')
                     form = EditProductForm(request.POST)
                     context = {'form': form, 'product': product, 'shade_id': shade_id, 'stock_product': stock_product}
                     return render(request, 'dashboard_app/edit_sold_product.html', context)
-            messages.success(request, f'{product.name}Product updated !!')
+            messages.success(request, f'{product.name} Product updated !!')
             return HttpResponseRedirect(reverse('Dashboard:customer-purchasing-info',
                                                 kwargs={'shade_id': shade_id, 'customer_id': customer_id}))
 
@@ -730,29 +730,30 @@ def delete_sold_product(request, shade_id, product_id, customer_id):
         return HttpResponseRedirect(url)
     payment_cart = PaymentCart.objects.filter(shade_id=shade_id, customers_id=customer_id, products_id=product_id)
     if payment_cart.exists():
-        messages.warning(request, 'Sorry you can not delete this product ! Some transaction completed under this product item !')
+        messages.warning(request, 'Sorry you can not delete this product ! Some transaction completed under this '
+                                  'product item !')
         return HttpResponseRedirect(url)
     stock_product.quantity += product.quantity
     stock_product.save()
     messages.warning(request, f'{product.name} deleted !!')
     product.delete()
-    update_balance_sheet()  # this function called to update balance sheet
+    update_balance_sheet(product.created.month, product.created.year)  # this function called to update balance sheet
     return HttpResponseRedirect(url)
 
 
 @login_required
 @allowed_users(allowed_roles=['Admin', 'Accountant', 'Manager'])
-def sold_in_current_month(request, month_n, month):
-    sold_products = Product.objects.filter(created__month=month)  # all sold product in current month
-    payment_cart = PaymentCart.objects.filter(payment_date__month=month)  # all payment in current month
+def sold_in_current_month(request, month_n, month, year):
+    sold_products = Product.objects.filter(created__month=month, created__year=year)  # all sold product in current month
+    payment_cart = PaymentCart.objects.filter(payment_date__month=month, payment_date__year=year)  # all payment in current month
     due_products = Product.objects.filter(sell_status='Due',
-                                          created__month=month)  # all due sold product in current month
+                                          created__month=month, created__year=year)  # all due sold product in current month
     total_due = round(sum(item.total_price for item in due_products), 2)
     total_paid = round(sum(item.paid_amount for item in payment_cart), 2)
     total_sold = round(sum(item.total_price for item in sold_products), 2)
     due_remaining = total_due - total_paid
     context = {'sold_products': sold_products, 'month_n': month_n, 'due_remaining': due_remaining,
-               'total_due': total_due, 'total_paid': total_paid, 'total_sold': total_sold}
+               'total_due': total_due, 'total_paid': total_paid, 'total_sold': total_sold, 'year': year}
     return render(request, 'dashboard_app/sold_in_current_month.html', context)
 
 

@@ -109,16 +109,6 @@ class EditProductForm(forms.ModelForm):
         fields = ['invoice', 'rate', 'quantity', 'supplier', 'created_by']
 
 
-# class StockHistoryForm(forms.ModelForm):
-#     def __init__(self, *args, **kwargs):
-#         super(StockHistoryForm, self).__init__(*args, **kwargs)
-#         self.fields['created_by'].widget.attrs.update({'class': 'form-control', 'placeholder': 'Input product name '})
-#         self.fields['supplier'].widget.attrs.update({'class': 'form-control',
-#                                                      'placeholder': 'Input supplier name/company '})
-#
-#     class Meta:
-#         model = StockHistory
-#         fields = ['supplier', 'created_by']
 
 
 

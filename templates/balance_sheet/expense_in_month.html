@@ -1,6 +1,6 @@
 {% extends 'base/base.html' %}
 {% load static %}
-{% block title_block %} All expenses in {{ month_n }} {% endblock %}
+{% block title_block %} All expenses in {{ month_n }} {{ year }}{% endblock %}
 
 {% block content_block %}
 <div class="row grid-margin" id="stock">
@@ -17,7 +17,7 @@
 			{% endif %}
 			
 			<div class="card-body">
-				<h6 class="card-title text-center">All expenses in <span class="badge badge-success">{{ month_n }}</span></h6>
+				<h6 class="card-title text-center">All expenses in <span class="badge badge-success">{{ month_n }} {{ year }}</span></h6>
 				<hr>
 				<form  action="#stock" method="GET">
 					<div class="d-flex table-responsive">

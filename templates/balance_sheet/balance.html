@@ -25,11 +25,11 @@
 						<tbody>
 						{% for balance in all_year.balancesheet_set.all %}
 						<tr style="background:#dee1e3;">
-							<td><a href="{% url 'Dashboard:sold-in-current-month' month_n=balance.get_month_display month=balance.month %}">{{ balance.get_month_display }}</a></td>
-							<td><a href="{% url 'Inventory:imports-current-month' month_n=balance.get_month_display month=balance.month %}">( {{ balance.import_qty }} ){{ balance.total_import }}</a></td>
+							<td><a href="{% url 'Dashboard:sold-in-current-month' month_n=balance.get_month_display month=balance.month year=balance.year.year %}">{{ balance.get_month_display }}</a></td>
+							<td><a href="{% url 'Inventory:imports-current-month' month_n=balance.get_month_display month=balance.month year=balance.year.year %}">( {{ balance.import_qty }} ){{ balance.total_import }}</a></td>
 							<td>{{ balance.sold_qty }}</td>
 							<td>{{ balance.total_sold }}</td>
-							<td><a href="{% url 'Balance:expense-in-month' month_n=balance.get_month_display month=balance.month %}">{{ balance.total_expense }}</a></td>
+							<td><a href="{% url 'Balance:expense-in-month' month_n=balance.get_month_display month=balance.month year=balance.year.year %}">{{ balance.total_expense }}</a></td>
 						</tr>
 						{% empty %}
 						<tr>

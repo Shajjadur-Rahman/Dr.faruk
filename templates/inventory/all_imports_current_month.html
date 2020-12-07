@@ -1,13 +1,13 @@
 {% extends 'base/base.html' %}
 {% load static %}
-{% block title_block %} All imports in  {{ month_n }} {% endblock %}
+{% block title_block %} All imports in  {{ month_n }} {{ year }} {% endblock %}
 
 {% block content_block %}
 <div class="row grid-margin" id="stock">
 	<div class="col-12">
 		<div class="card">
 			<div class="card-body">
-				<h6 class="card-title text-center">All imports in  <span class="badge badge-success">{{ month_n }}</span></h6>
+				<h6 class="card-title text-center">All imports in  <span class="badge badge-success">{{ month_n }} {{ year }}</span></h6>
 				<hr>
 				<form  action="#stock" method="GET" class="mt-4">
 					<div class="d-flex table-responsive">
@@ -57,9 +57,9 @@
 						<tr style="background:#a8a8a8;">
 							<td>Total</td>
 							<td></td>
+							<td>{{ total }}</td>
 							<td></td>
-							<td>{{ total_qty }}</td>
-							<td>{{ total_price }}</td>
+							<td>Total Qty {{ total_qty }}</td>
 							<td></td>
 							<td></td>
 						</tr>

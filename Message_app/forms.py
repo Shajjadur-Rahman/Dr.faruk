@@ -1,5 +1,5 @@
 from django import forms
-from .models import InboxMessage, NewMessage
+from .models import NewMessage
 
 
 class MessageForm(forms.ModelForm):
